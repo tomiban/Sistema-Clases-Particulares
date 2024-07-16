@@ -1,0 +1,135 @@
+showInPopup = (url, title) => {
+    console.log(url, title)
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (res) {
+            $('#form-modal .modal-body').html(res);
+            $('#form-modal .modal-title').html(title);
+            $('#form-modal').modal('show');z
+        }
+    })
+}
+
+jQueryAjaxPost = form => {
+    try {
+        $.ajax({
+            type: 'POST',
+            url: form.action,
+            data: new FormData(form),
+            contentType: false,
+            processData: false,
+            success: function (res) {
+                if (res.isValid) {
+                    $('#view-all').html(res.html)
+                    $('#form-modal .modal-body').html('');
+                    $('#form-modal .modal-title').html('');
+                    $('#form-modal').modal('hide');
+                    // reload the table         
+                    location.reload();
+                } else {
+                    $('#form-modal .modal-body').html(res.html);
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+        //to prevent default form submit event
+        return false;
+    } catch (ex) {
+        console.log(ex);
+    }
+}
+
+//funcion  para abrir un modal y ambiar el estado de historial a true
+
+
+(function (modalDeleteDialog) {
+
+    var methods = {
+        "openModal": openModal,
+        "deleteItem": deleteItem
+    };
+
+    var item_to_delete;
+
+    /**
+         * Open a modal by class name or Id.
+         *
+         * @return string id item.
+         */
+    function openModal(modalName, classOrId, sourceEvent, deletePath, eventClassOrId) {
+        var textEvent;
+        if (classOrId) {
+            textEvent = "." + modalName;
+        } else {
+            textEvent = "#" + modalName;
+        }
+
+        $(textEvent).click((e) => {
+            console.log(e.currentTarget.dataset.id);
+            item_to_delete = e.currentTarget.dataset.id;
+            deleteItem(sourceEvent, deletePath, eventClassOrId);
+        });
+    }
+
+    /**
+     * Path to delete an item.
+     *
+     * @return void.
+     */
+    function deleteItem(sourceEvent, deletePath, eventClassOrId) {
+        var textEvent;
+        if (eventClassOrId) {
+            textEvent = "." + sourceEvent;
+        } else {
+            textEvent = "#" + sourceEvent;
+        }
+        $(textEvent).click(function () {
+            window.location.href = deletePath + item_to_delete;
+        });
+    }
+
+    modalDeleteDialog.sc_deleteDialog = methods;
+
+})(window);
+
+
+(function (modalPaidDialog) {
+    var methods = {
+        "openModal": openModal,
+        "markAsPaidItem": markAsPaidItem
+    };
+
+    var item_to_mark_as_paid;
+
+    function openModal(modalName, classOrId, sourceEvent, markAsPaidPath, eventClassOrId) {
+        var textEvent;
+        if (classOrId) {
+            textEvent = "." + modalName;
+        } else {
+            textEvent = "#" + modalName;
+        }
+
+        $(textEvent).click((e) => {
+            console.log(e.currentTarget.dataset.id);
+            item_to_mark_as_paid = e.currentTarget.dataset.id;
+            markAsPaidItem(sourceEvent, markAsPaidPath, eventClassOrId);
+        });
+    }
+
+    function markAsPaidItem(sourceEvent, markAsPaidPath, eventClassOrId) {
+        var textEvent;
+        if (eventClassOrId) {
+            textEvent = "." + sourceEvent;
+        } else {
+            textEvent = "#" + sourceEvent;
+        }
+        $(textEvent).click(function () {
+            window.location.href = markAsPaidPath + item_to_mark_as_paid;
+        });
+    }
+
+    modalPaidDialog.sc_markAsPaidDialog = methods;
+})(window);

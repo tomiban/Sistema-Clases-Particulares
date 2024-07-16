@@ -1,0 +1,56 @@
+@model IEnumerable<TeddyMVC.Models.Turno>
+
+@{
+  ViewData["Title"] = "Agenda";
+}
+
+<script src="~/lib/fullcalendar/index.global.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<div class="calendar-container">
+  <div id="calendar"></div>
+</div>
+
+<style>
+  #calendar {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      locale: 'es',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: "title",
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+      },
+      navLinks: true, // can click day/week names to navigate views
+      editable: true,
+      droppable: true,
+    
+      selectable: true,
+      buttonText: {
+        today: 'Hoy',
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Día',
+        list: 'SAPE'
+      },
+      events: @Html.Raw(ViewBag.Turnos),
+      eventDrop: function (info) {
+        alert(info.event.title + " was dropped on " + info.event.start.toISOString());
+
+        if (!confirm("Are you sure about this change?")) {
+          info.revert();
+        }
+      }
+    });
+    console.log("EPAAAAAS")
+    calendar.render();
+  });
+</script>

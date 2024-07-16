@@ -1,0 +1,69 @@
+@model IEnumerable<TeddyMVC.Models.Historial>
+
+@{
+    ViewData["Title"] = "Historial de Turnos";
+}
+
+<link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="my-4">Historial de Turnos</h2>
+            <div class="card">
+                <div class="card-header text-center">
+                    <h5>Lista de Turnos Pasados</h5>
+                </div>
+                <div class="card-body">
+                    <table id="historial" class="table table-hover table-responsive table-stripped">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Alumno</th>
+                                <th>Horas</th>
+                                <th>Precio por Hora</th>
+                                <th>Asignatura</th>
+                                <th>Pagado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-success"><strong>@item.Turno.Fecha.ToString("dd/MM/yyyy")</strong></td>
+                                    <td>@item.Alumno.Nombre @item.Alumno.Apellido</td>
+                                    <td>@item.Turno.Horas</td>
+                                    <td>@item.Turno.PrecioHora.ToString("C")</td>
+                                    <td>@item.Turno.Asignatura</td>
+                                    <td>
+                                        @if (item.Turno.Pagado)
+                                        {
+                                            <span class="badge bg-success">Pagado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">No Pagado</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#historial').DataTable({
+                "language": {
+                    url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json"
+                },
+            });
+        });
+    </script>
+}

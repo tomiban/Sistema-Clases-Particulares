@@ -1,0 +1,137 @@
+@model TeddyMVC.Models.FacturaViewModel
+
+@{
+    ViewBag.Title = "Factura";
+}
+
+<style>
+    .section-divider {
+        border-top: 2px solid #ddd;
+        margin: 30px 0;
+    }
+
+    .btn-section {
+        margin: 30px 0;
+    }
+
+    .btn-spacing {
+        margin-right: 10px;
+    }
+
+    .total-amount {
+        font-size: 1.5rem;
+        color: #D32F2F;
+        font-weight: bold;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+    }
+
+    .card-body p {
+        margin-bottom: 0.5rem;
+    }
+</style>
+
+
+
+<div class="container mt-5 p-4 bg-light rounded shadow">
+    <div class="text-center mb-4">
+        <img src="~/img/logo-transparent.png" alt="Logo" class="img-fluid mb-3" style="width: 100px;" />
+        <h2 class="text-danger">Lic. Fabiana Seggiaro</h2>
+        <h4 class="text-secondary">CLASES PARTICULARES</h4>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Datos del Profesor</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nombre:</strong> Fabiana Seggiaro</p>
+                    <p><strong>DNI:</strong> 17590935</p>
+                    <p><strong>Dirección:</strong> Gabaret 1824</p>
+                    <p><strong>Email:</strong> fseggiaro16@gmail.com</p>
+                    <p><strong>Banco:</strong> Santander Río</p>
+                    <p><strong>Alias:</strong> ITALIA.RAMA.CAMBIO</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Datos del Alumno</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Nombre:</strong> @Model.Alumno.Nombre @Model.Alumno.Apellido</p>
+                    <p><strong>DNI:</strong> @Model.Alumno.DNI</p>
+                    <p><strong>Dirección:</strong> @Model.Alumno.Domicilio</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="mb-4">
+        <h3 class="pb-2">Registro de Clases</h3>
+        <p><strong>Fecha:</strong> @DateTime.Now.ToShortDateString()</p>
+    </div>
+
+    <div class="mb-4">
+        <h3>Clases</h3>
+        <table class="table table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Horas</th>
+                    <th>Precio por Hora</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var turno in Model.Turnos)
+                {
+                    <tr>
+                        <td>@turno.Fecha.ToShortDateString()</td>
+                        <td>@turno.Horas</td>
+                        <td>@turno.PrecioHora.ToString("C")</td>
+                        <td>@((turno.Horas * turno.PrecioHora).ToString("C"))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-right mb-3 pt-2">
+        <p class="lead fs-2">Total a Pagar: <span class="total-amount">@Model.Total.ToString("C")</span></p>
+    </div>
+
+
+</div>
+<div class="text-center btn-section">
+    <a href="@Url.Action("Index", "Facturacion")" class="btn btn-secondary btn-spacing">
+        <span class="oi oi-arrow-left"></span> Volver a Facturación
+    </a>
+    <button id="btnDownloadPdf" class="btn btn-primary btn-spacing">
+        <span class="oi oi-data-transfer-download"></span> Descargar PDF
+    </button>
+    <button id="btnSendEmail" class="btn btn-success btn-spacing">
+        <i class="fab fa-whatsapp"></i> Enviar
+    </button>
+</div>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#btnDownloadPdf').click(function () {
+            window.location.href = '@Url.Action("DownloadPdf", "Facturacion", new { id = Model })';
+        });
+
+        $('#btnSendEmail').click(function () {
+            $.post('@Url.Action("SendEmail", "Facturacion")', { id: Model.FacturaId }, function (data) {
+                alert(data.message);
+            });
+        });
+    });
+</script>
