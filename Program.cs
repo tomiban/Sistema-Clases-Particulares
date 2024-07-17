@@ -1,7 +1,10 @@
+using System.Runtime.InteropServices;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using Microsoft.EntityFrameworkCore;
 using TeddyMVC.Data;
+using TeddyMVC.Interfaces;
+using TeddyMVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContextFactory<ApplicationDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 var app = builder.Build();
 
@@ -30,5 +34,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Agenda}/{action=Index}/{id?}");
+IWebHostEnvironment env = app.Environment;
 
+// Configurar Rotativa para Arch Linux
+var rotativaPath = Path.Combine("rotativa", "arch", "bin");
+Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, rotativaPath);
 app.Run();
