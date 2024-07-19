@@ -2,165 +2,313 @@
 @{
     Layout = "_PdfLayout"; // Usar el layout específico para el PDF
 }
+<!-- Otros elementos del head -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ffffff;
-            color: #333333;
-        }
-        .invoice-container {
-            width: 80%;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border: 1px solid #ddd;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .invoice-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .invoice-header img {
-            width: 80px;
-            margin-bottom: 10px;
-        }
-        .invoice-header h2 {
-            color: #dc3545;
-            margin: 0;
-        }
-        .invoice-header h4 {
-            color: #6c757d;
-            margin: 5px 0;
-        }
-        .flex-container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .card {
-            border: 1px solid #ddd;
-            padding: 10px;
-            flex: 1;
-            margin: 0 10px;
-        }
-        .card-header {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            font-weight: bold;
-        }
-        .card-body {
-            padding: 10px;
-        }
-        .card-body p {
-            margin: 5px 0;
-        }
-        .table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-        }
-        .table th, .table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        .table th {
-            background-color: #f1f1f1;
-        }
-        .total-amount {
-            font-weight: bold;
-            font-size: 1.25rem;
-        }
-        .text-right {
-            text-align: right;
-        }
-        .footer {
-            text-align: center;
-            font-size: 0.9rem;
-            margin-top: 20px;
-            padding-top: 10px;
-            border-top: 1px solid #ddd;
-        }
-        .footer p {
-            margin: 5px 0;
-        }
-    </style>
-</head>
-<body>
-    <div class="invoice-container">
-        <div class="invoice-header">
-            <img src="~/img/logo-transparent.png" alt="Logo" />
-            <h2>Lic. Fabiana Seggiaro</h2>
-            <h4>CLASES PARTICULARES</h4>
-        </div>
+<style>
+    /* Contenedor de la tabla */
+    .table-container {
+        table-layout: fixed;
+        font-size: 10pt;
+        font-family: 'Roboto', sans-serif;
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-        <div class="flex-container">
-            <div class="card">
-                <div class="card-header">
-                    Datos del Profesor
-                </div>
-                <div class="card-body">
-                    <p><strong>Nombre:</strong> Fabiana Seggiaro</p>
-                    <p><strong>DNI:</strong> 17590935</p>
-                    <p><strong>Dirección:</strong> Gabaret 1824</p>
-                    <p><strong>Email:</strong> fseggiaro16@gmail.com</p>
-                    <p><strong>Banco:</strong> Santander Río</p>
-                    <p><strong>Alias:</strong> ITALIA.RAMA.CAMBIO</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    Datos del Alumno
-                </div>
-                <div class="card-body">
-                    <p><strong>Nombre:</strong> @Model.Alumno.Nombre @Model.Alumno.Apellido</p>
-                    <p><strong>DNI:</strong> @Model.Alumno.DNI</p>
-                    <p><strong>Dirección:</strong> @Model.Alumno.Domicilio</p>
-                </div>
-            </div>
-        </div>
+    /* Columnas */
+    .col-22 {
+        width: 5px;
+    }
 
-        <div class="section-divider"></div>
+    .col-205 {
+        width: 205px;
+    }
 
-        <div class="mb-4">
-            <h3 class="pb-2">Registro de Clases</h3>
-            <p><strong>Fecha:</strong> @DateTime.Now.ToShortDateString()</p>
-        </div>
+    .col-157 {
+        width: 157px;
+    }
 
-        <div class="mb-4">
-            <h3>Clases</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Horas</th>
-                        <th>Precio por Hora</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var turno in Model.Turnos)
-                    {
-                        <tr>
-                            <td>@turno.Fecha.ToShortDateString()</td>
-                            <td>@turno.Horas</td>
-                            <td>@turno.PrecioHora.ToString("C")</td>
-                            <td>@((turno.Horas * turno.PrecioHora).ToString("C"))</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+    .col-126 {
+        width: 226px;
+    }
 
-        <div class="text-right mb-3 pt-2">
-            <p class="lead fs-4">TOTAL A PAGAR: <span class="total-amount">@Model.Total.ToString("C")</span></p>
-        </div>
+    .col-220 {
+        width: 150px;
+    }
 
-        <div class="footer">
-            <p>Fabiana Seggiaro - Lic. en Cs Sociales y Humanidades</p>
-            <p>Tel: 3496652675 | Banco: Santander Rio | Alias: ITALIA.RAMA.CAMBIO | Mail: fseggiaro16@gmail.com</p>
-        </div>
+    /* Filas */
+    .row-height-39 {
+        height: 39px;
+    }
+
+    .row-height-9 {
+        height: 9px;
+    }
+
+    .row-height-20 {
+        height: 20px;
+    }
+
+    .row-height-17 {
+        height: 27px;
+    }
+
+    .row-height-29 {
+        height: 39px;
+    }
+
+    .row-height-8 {
+        height: 8px;
+    }
+
+    .row-height-32 {
+        height: 32px;
+    }
+
+    .row-height-33 {
+        height: 33px;
+        
+    }
+
+    .row-height-15 {
+        height: 15px;
+    }
+
+    .row-height-28 {
+        height: 28px;
+    }
+
+    .row-height-44 {
+        height: 44px;
+    }
+
+    .row-height-10 {
+        height: 10px;
+    }
+
+    .row-height-52 {
+        height: 52px;
+    }
+
+    /* Encabezado */
+    .header {
+        border-bottom: 1px solid #4472c4;
+        font-family: 'Roboto', sans-serif;
+        font-size: 16pt;
+        font-weight: bold;
+        color: #4472c4;
+    }
+
+    /* Celdas */
+    .cell {
+        overflow: hidden;
+        padding: 0px 10px;
+        vertical-align: middle;
+    }
+
+    .italic {
+        font-family: 'Roboto', sans-serif;
+        font-weight: normal;
+        font-style: italic;
+    }
+
+    .bold-blue {
+        font-family: 'Roboto', sans-serif;
+        font-size: 12pt;
+        font-weight: bold;
+        color: #4472c4;
+    }
+
+    .center-text {
+        text-align: center;
+    }
+
+    .right-text {
+        text-align: right;
+    }
+
+    .bg-light-blue {
+        background-color: #cfe2f3;
+    }
+
+    .bg-light-gray {
+        background-color: #c9daf8;
+    }
+
+    /* Total */
+    .total {
+        font-family: 'Roboto', sans-serif;
+        font-size: 18pt;
+        font-weight: normal;
+        text-align: center;
+    }
+
+    /* Comentarios */
+    .comment {
+        font-family: 'Roboto', sans-serif;
+        font-size: 11pt;
+        font-weight: bold;
+        color: #4472c4;
+        text-align: right;
+        margin-bottom: 1rem;
+    }
+
+    /* Pie de página */
+    .footer {
+        margin-top: 1rem;
+        font-family: 'Roboto', sans-serif;
+        font-size: 10pt;
+        color: #5d7079;
+        text-align: center;
+    }
+
+    .img-container {
+        display: block;
+       float: right;
+        margin: 10px 0;
+    }
+
+    .img {
+        width: 50px;
+    }
+
+    .subtitle
+    {
+        font-weight: bold;
+        color: #a09e9e;
+    }
+
+    .footer-bold {
+        font-weight: bold;
+    }
+</style>
+
+<table class="table-container">
+    <div class="img-container">
+        <img class="img" src="~/img/logo-transparent.png" alt="Logo" />
     </div>
+    
+    <colgroup>
+        <col class="col-22" />
+        <col class="col-205" />
+        <col class="col-157" />
+        <col class="col-126" />
+        <col class="col-220" />
+    </colgroup>
+    
+    <tbody>
+        <tr class="">
+            <td class="cell"></td>
+            <td class="cell subtitle">Docente</td>
+            <td class="cell "></td>
+            <td class="cell subtitle" colspan="2">Alumno</td>
+        </tr>
+        <tr class="row-height-39">
+            <td class="cell"></td>
+            <td class="cell header">Fabiana Seggiaro</td>
+            <td class="cell header"></td>
+            <td class="cell header" colspan="2">@Model.Alumno.Nombre @Model.Alumno.Apellido</td>
+        </tr>
+        <tr class="row-height-9">
+            <td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+        </tr>
+        <tr class="row-height-20">
+            <td class="cell"></td>
+            <td class="cell italic">Dirección: Gabarret 1824</td>
+            <td class="cell"></td>
+            <td class="cell italic">Dirección: @Model.Alumno.Domicilio</td>
+            <td class="cell"></td>
+        </tr>
+        <tr class="row-height-20">
+            <td class="cell"></td>
+            <td class="cell italic">Ciudad: Esperanza, Santa Fe.</td>
+            <td class="cell"></td>
+            <td class="cell italic">Ciudad: @Model.Alumno.Ciudad</td>
+            <td class="cell"></td>
+        </tr>
+        <tr class="row-height-20">
+            <td class="cell"></td>
+            <td class="cell italic">Dni: 1598546</td>
+            <td class="cell"></td>
+            <td class="cell italic">Dni: @Model.Alumno.DNI</td>
+            <td class="cell"></td>
+        </tr>
+        <tr class="row-height-20">
+            <td class="cell"></td>
+            <td class="cell italic">Email: fseggiaro16@gmail.com</td>
+            <td class="cell"></td>
+            <td class="cell italic">Email:</td>
+            <td class="cell"></td>
+        </tr>
+        <tr class="row-height-17">
+            <td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+        </tr>
+        <tr class="row-height-29">
+            <td class="cell"></td>
+            <td class="cell bold-blue">Clases</td>
+            <td class="cell bold-blue center-text">Horas</td>
+            <td class="cell bold-blue right-text">Precio Unitario</td>
+            <td class="cell bold-blue center-text">Precio</td>
+        </tr>
+        <tr class="row-height-8">
+            <td class="cell"></td>
+            <td class="cell" colspan="4"></td>
+        </tr>
+        @foreach (var (turno, index) in Model.Turnos.Select((turno, index) => (turno, index)))
+        {
+            <tr class="row-height-32">
+                <td class="cell"></td>
+                <td class="cell factura-row bg-light-blue">Clase @(index + 1) - @turno.Fecha.ToShortDateString()</td>
+                <td class="cell factura-row bg-light-blue center-text">@turno.Horas</td>
+                <td class="cell factura-row bg-light-blue right-text">@turno.PrecioHora.ToString("C")</td>
+                <td class="cell factura-row bg-light-blue center-text">@((turno.Horas * turno.PrecioHora).ToString("C"))</td>
+            </tr>
+        }
+        <tr class="row-height-15">
+            <td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+        </tr>
+        <tr class="row-height-32">
+            <td class="cell"></td>
+            <td class="cell bold-blue">Comentarios</td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+        </tr>
+        <tr class="row-height-28">
+            <td class="cell"></td>
+            <td class="cell bg-light-gray" colspan="2"></td>
+            <td class="cell comment">TOTAL</td>
+            <td class="cell total">$@Model.Total</td>
+        </tr>
+        <tr class="row-height-44">
+            <td class="cell"></td>
+            <td class="cell bg-light-gray" colspan="2"></td>
+            <td class="cell"></td>
+            <td class="cell"></td>
+        </tr>
+        <tr class="row-height-10">
+            <td colspan="5"></td>
+        </tr>
+        <tr class="row-height-52">
+            <td class="cell"></td>
+            <td class="cell footer bg-light-gray" colspan="4">
+                Fabiana Seggiaro - Lic. en Cs Sociales y Humanidades<br />
+                <span class="footer-bold">Tel: 3496652675</span> |
+                <span class="footer-bold">Banco: Santander Rio | Alias: ITALIA.RAMA.CAMBIO</span> |
+                <span class="footer-bold">Mail: fseggiaro16@gmail.com</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

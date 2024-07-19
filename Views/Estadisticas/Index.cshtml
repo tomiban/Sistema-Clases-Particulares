@@ -1,0 +1,110 @@
+@model TeddyMVC.Models.EstadisticasViewModel
+
+@{
+    ViewData["Title"] = "Estadisticas";
+}
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <div class="container mt-5">
+        <h1 class="mb-4">Estadísticas del Mes</h1>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="horasChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="facturadoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="mb-4">Alumnos Facturados</h2>
+        
+        <input id="searchInput" type="text" class="form-control mb-3" placeholder="Buscar alumno...">
+        
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                    <th>Horas de Clases</th>
+                </tr>
+            </thead>
+            <tbody id="alumnoTableBody">
+                @foreach (var alumno in Model.HorasClasesPorAlumno)
+                {
+                    <tr>
+                        <td>@alumno.Nombre</td>
+                        <td>@alumno.Apellido</td>
+                        <td>@alumno.DNI</td>
+                        <td>@alumno.HorasClases</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $("#searchInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#alumnoTableBody tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            var ctxHoras = document.getElementById('horasChart').getContext('2d');
+            var horasChart = new Chart(ctxHoras, {
+                type: 'bar',
+                data: {
+                    labels: ['Horas de Clases'],
+                    datasets: [{
+                        label: 'Horas',
+                        data: [@Model.TotalHoras],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            var ctxFacturado = document.getElementById('facturadoChart').getContext('2d');
+            var facturadoChart = new Chart(ctxFacturado, {
+                type: 'bar',
+                data: {
+                    labels: ['Total Facturado'],
+                    datasets: [{
+                        label: 'Facturado',
+                        data: [@Model.TotalFacturado],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>

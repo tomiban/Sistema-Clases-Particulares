@@ -31,9 +31,9 @@ namespace TeddyMVC.Controllers
         public async Task<IActionResult> Index()
         {
             var turnos = await _context.Turnos
-        .Include(t => t.Alumno) // Incluye la propiedad de navegación Alumno
-        .Where(t => t.Fecha > DateTime.Now && t.Pagado == false)
-        .ToListAsync();
+      .Include(t => t.Alumno) // Incluye la propiedad de navegación Alumno
+      .Where(t => t.Fecha >= DateTime.Now && t.Fecha < DateTime.Now.AddDays(1) && t.Pagado == false)
+      .ToListAsync();
             return View(turnos);
         }
 
@@ -103,7 +103,7 @@ namespace TeddyMVC.Controllers
                 {
                     TurnoId = turno.Id,
                     AlumnoId = turno.AlumnoId,
-                   
+
                 };
                 await _context.AddAsync(nuevoHistorial);
 

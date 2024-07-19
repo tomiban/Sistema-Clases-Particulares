@@ -15,7 +15,9 @@ namespace TeddyMVC.Utils
                 Nombre = alumno.Nombre,
                 Apellido = alumno.Apellido,
                 DNI = alumno.DNI,
-                Domicilio = alumno.Domicilio
+                Domicilio = alumno.Domicilio,
+                Ciudad = alumno.Ciudad,
+                Telefono = alumno.Telefono
             };
         }
 

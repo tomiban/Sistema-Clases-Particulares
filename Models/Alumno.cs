@@ -17,6 +17,8 @@ public class Alumno
 
     [Required, MaxLength(100)]
     public string Domicilio { get; set; } = string.Empty;
+    public string? Ciudad { get; set; }  = string.Empty;
+    public string? Telefono { get; set; }  = string.Empty; 
     public ISet<Turno> Turnos { get; } = new HashSet<Turno>();
     public virtual ICollection<Historial> Historial { get; set; } = new List<Historial>();
 }

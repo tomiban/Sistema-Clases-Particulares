@@ -159,5 +159,37 @@ namespace TeddyMVC.Controllers
                 TurnosPendientes = turnosPendientes
             });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> PagarClases(int[] turnosIds)
+        {
+            if (turnosIds == null || turnosIds.Length == 0)
+            {
+                return BadRequest(new { message = "No se han seleccionado turnos para pagar." });
+            }
+
+            var turnos = await _context.Turnos
+                .Include(t => t.Alumno)
+                .Where(t => turnosIds.Contains(t.Id))
+                .ToListAsync();
+
+            if (turnos == null || !turnos.Any())
+            {
+                return NotFound(new { message = "No se encontraron turnos para los IDs proporcionados." });
+            }
+
+            foreach (var turno in turnos)
+            {
+                turno.Pagado = true;
+            }
+
+            await _context.SaveChangesAsync();
+
+            var alumnoId = turnos.First().Alumno.Id;
+
+            return Ok(new { message = "Clases pagadas con éxito." });
+        }
+
+
     }
 }

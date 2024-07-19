@@ -46,8 +46,8 @@
     <button id="btnDownloadPdf" class="btn btn-primary btn-spacing">
         <span class="oi oi-data-transfer-download"></span> Descargar PDF
     </button>
-    <button id="btnSendEmail" class="btn btn-success btn-spacing">
-        <i class="fab fa-whatsapp"></i> Enviar
+    <button id="btnSendByTel" class="btn btn-success btn-spacing">
+        <i class="fab fa-whatsapp"></i> Contactar
     </button>
 </div>
 
@@ -65,5 +65,13 @@
             $('#downloadForm').submit();
         });
     });
+
+      $('#btnSendByTel').click(function () {
+            var phoneNumber = "@Model.Alumno.Telefono";
+            var message = encodeURIComponent("Aquí está tu factura.");
+            var whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+
+            window.open(whatsappUrl, '_blank');
+        });
 </script>
 <div class="p-4"></div>
