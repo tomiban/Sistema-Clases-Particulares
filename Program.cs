@@ -34,9 +34,32 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Agenda}/{action=Index}/{id?}");
-IWebHostEnvironment env = app.Environment;
+/* IWebHostEnvironment env = app.Environment;
 
 // Configurar Rotativa para Arch Linux
 var rotativaPath = Path.Combine("rotativa", "arch", "bin");
-Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, rotativaPath);
+Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, rotativaPath); */
+
+IWebHostEnvironment env = app.Environment;
+
+// Detectar el sistema operativo
+string os = Environment.OSVersion.Platform.ToString().ToLower();
+
+// Configurar Rotativa según el sistema operativo
+if (os.Contains("win"))
+{
+    // Configurar Rotativa para Windows
+    var rotativaPath = Path.Combine("rotativa", "windows", "wkhtmltopdf.exe");
+    Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, rotativaPath);
+}
+else if (os.Contains("unix"))
+{
+    // Configurar Rotativa para Arch Linux
+    var rotativaPath = Path.Combine("rotativa", "arch", "bin");
+    Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, rotativaPath);
+}
+else
+{
+    throw new PlatformNotSupportedException("Este sistema operativo no es compatible con Rotativa.");
+}
 app.Run();
