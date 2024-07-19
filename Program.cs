@@ -46,10 +46,10 @@ IWebHostEnvironment env = app.Environment;
 string os = Environment.OSVersion.Platform.ToString().ToLower();
 
 // Configurar Rotativa según el sistema operativo
-if (os.Contains("win"))
+if (os.Contains("win32nt"))
 {
     // Configurar Rotativa para Windows
-    var rotativaPath = Path.Combine("rotativa", "windows", "wkhtmltopdf.exe");
+    var rotativaPath = Path.Combine("rotativa", "windows");
     Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, rotativaPath);
 }
 else if (os.Contains("unix"))
