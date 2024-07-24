@@ -34,32 +34,17 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Agenda}/{action=Index}/{id?}");
-/* IWebHostEnvironment env = app.Environment;
 
-// Configurar Rotativa para Arch Linux
-var rotativaPath = Path.Combine("rotativa", "arch", "bin");
-Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, rotativaPath); */
 
-IWebHostEnvironment env = app.Environment;
-
-// Detectar el sistema operativo
-string os = Environment.OSVersion.Platform.ToString().ToLower();
-
-// Configurar Rotativa según el sistema operativo
-if (os.Contains("win32nt"))
+using (var scope = app.Services.CreateScope())
 {
-    // Configurar Rotativa para Windows
-    var rotativaPath = Path.Combine("rotativa", "windows");
-    Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, rotativaPath);
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
 }
-else if (os.Contains("unix"))
-{
-    // Configurar Rotativa para Arch Linux
-    var rotativaPath = Path.Combine("rotativa", "arch", "bin");
-    Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, rotativaPath);
-}
-else
-{
-    throw new PlatformNotSupportedException("Este sistema operativo no es compatible con Rotativa.");
-}
+
 app.Run();
